@@ -120,6 +120,10 @@ class MainController extends BaseObject{
             unset($_REQUEST['messageId']);
             return;
         }
+        if(!isset($title) || $title == null ){
+            SessionController::addErrorMessage('Bitte geben Sie mindestens Titel und Nachricht ein');
+            return false;
+        }
         MessageDataManager::insertMessage($title,$message, SessionController::getActiveChannel(), SessionController::getUser());
     }
     public function resetMessage(){

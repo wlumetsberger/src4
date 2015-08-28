@@ -48,6 +48,7 @@ class LoginController extends BaseObject{
             SessionController::addUser($user->getID());
             return true;
         }
+        SessionController::addErrorMessage('Benutzername oder Passwort ist falsch');
         return false;
     }
     public function register(){
@@ -57,9 +58,8 @@ class LoginController extends BaseObject{
         $password = $_REQUEST['password'];
 
         if(UserDataManager::getUserForUserName($username) != null){
-            return false;
+           SessionController::addErrorMessage('Benutzer existiert bereits');
         }
-
         $channels = UserDataManager::getChannelsAvailable();
         $passwordHash = hash('sha1',$username . '|' . $password);
         $user = new User(null,$username, $passwordHash, $firstname,$lastname);

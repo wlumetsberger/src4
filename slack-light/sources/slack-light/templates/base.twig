@@ -8,6 +8,14 @@
     {% endblock %}
 </head>
 <body>
+{% if runtime_errors is defined %}
+    {% for error in runtime_errors %}
+    <div class="alert alert-danger fade in">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <strong>Error!</strong> {{ error }}
+    </div>
+    {% endfor %}
+{% endif %}
 {% if loggedIn is defined %}
     {% block navigation %}
     <nav class="navbar navbar-default">

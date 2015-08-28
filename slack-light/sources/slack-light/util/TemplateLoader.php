@@ -28,8 +28,9 @@ class TemplateLoader extends BaseObject {
 
     public function loadTemplate($templateName, $arguments){
         $template = $this->twig->loadTemplate($templateName);
+        $errors = SessionController::getErrorMessages();
         if(isset($arguments)){
-            if(is_array($arguments) && SessionController::isLoggedIn()){
+            if(is_array($arguments) && SessionController::isLoggedIn()) {
                 $arguments['loggedIn'] = SessionController::getUserName();
                 $arguments['logout'] = Util::action('logout');
                 $arguments['channels'] = MainController::getInstance()->getChannels();
@@ -37,9 +38,20 @@ class TemplateLoader extends BaseObject {
                 $arguments['sendNewMessage'] = Util::action('addMessage');
                 $arguments['resetMessages'] = Util::action('resetMessage');
                 $arguments['editMessage'] = Util::action('editMessage');
-
+                $arguments['runtime_errors'] = $errors;
+            }if(is_array($arguments) && isset($errors) && is_array($errors)){
+                $arguments['runtime_errors'] = $errors;
             }
+        }else if(isset($errors) && is_array($errors) ){
+            $arguments = array('runtime_errors' => $errors-$errors);
         }
-        echo $template->render($arguments);
+        if(isset($arguments) && is_array($arguments)){
+           // die(var_dump($arguments));
+            echo $template->render($arguments);
+        }else{
+            //echo(var_dump($arguments));
+            echo $template->render(array('runtime_errors'=> $errors));
+        }
+
     }
 }

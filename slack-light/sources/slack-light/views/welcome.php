@@ -1,8 +1,4 @@
 <?php
-
-if(isset($_GET['errors'])){
-    $errors = unserialize(urldecode($_GET['errors']));
-}
 /**
  * Created by PhpStorm.
  * User: Wolfgang

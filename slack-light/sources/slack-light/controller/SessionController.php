@@ -35,10 +35,11 @@ class SessionController{
     }
 
     public static function isLoggedIn(){
-        $user = self::getUser();
+        $user = SessionController::getUser();
         return isset($user)&& $user != null;
     }
     public static function destroy(){
+            unset($_SESSION['user']);
            session_destroy();
     }
     public static function setChannel($channelId){
@@ -57,6 +58,29 @@ class SessionController{
             $m = $_SESSION['message'];
             unset($_SESSION['message']);
             return $m;
+        }
+        return null;
+    }
+    public static function addErrorMessage($message){
+
+        if(isset($_SESSION['errors']) && is_array($_SESSION['errors'])){
+            array_push($_SESSION['errors'],$message);
+        }else{
+            $arr = array();
+            array_push($arr, $message);
+            $_SESSION['errors'] = $arr;
+        }
+
+    }
+    public static function clearErrorMessagegs(){
+        unset($_SESSION['errors']);
+    }
+    public static function getErrorMessages(){
+
+        if(isset($_SESSION['errors'])&& is_array($_SESSION['errors'])){
+            $retVal = $_SESSION['errors'];
+            //unset($_SESSION['errors']);
+            return $retVal;
         }
         return null;
     }

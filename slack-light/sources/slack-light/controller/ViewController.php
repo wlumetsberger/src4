@@ -34,6 +34,7 @@ class ViewController extends BaseObject{
     }
 
     public function invokeAction(){
+        SessionController::clearErrorMessagegs();
         if(!isset($_REQUEST[self::ACTION]) ){
             throw new Exception(self::ACTION. ' parameter is not specified');
         }
@@ -41,23 +42,16 @@ class ViewController extends BaseObject{
         switch($action){
             case self::ACTION_LOGIN:
                 LoginController::getInstance()->handleLogin();
-                if(SessionController::isLoggedIn()){
-                   Util::redirect('index.php');
-                }else{
-                    $this->forwardRequest(array('Invalid credentials provied'));
-                }
+                //if(SessionController::isLoggedIn()){
+                Util::redirect('index.php');
                 break;
             case 'logout':
                 LoginController::getInstance()->handleLogout();
                 Util::redirect("index.php?action='logout'");
                 break;
             case 'register':
-                if(LoginController::getInstance()->register()){
-                    Util::redirect("index.php");
-                }else{
-                    // Errors anzeigen
-                }
-
+                LoginController::getInstance()->register();
+                Util::redirect("index.php");
                 break;
             case 'switchChannel':
                 MainController::getInstance()->switchToChannel();
