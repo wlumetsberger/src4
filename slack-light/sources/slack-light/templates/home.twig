@@ -1,0 +1,201 @@
+{% extends "base.twig" %}
+
+{% block content %}
+    <style>
+    .chat
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.img-circle{
+    max-height: 50px;
+}
+.chat li
+{
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #B3A9A9;
+}
+
+.chat li.left .chat-body
+{
+    margin-left: 60px;
+}
+
+.chat li.right .chat-body
+{
+    margin-right: 60px;
+}
+
+
+.chat li .chat-body p
+{
+    margin: 0;
+    color: #777777;
+}
+
+.panel .slidedown .glyphicon, .chat .glyphicon
+{
+    margin-right: 5px;
+}
+
+.panel-body
+{
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar
+{
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #555;
+}
+
+
+</style>
+    <div class="row">
+        <div class="col-sm-2">
+            <ul id="sidebar" class="nav nav-stacked affix">
+                <li>Channels:</li>
+                {% for channel in channels %}
+
+                <li><a href="{{ channel['link'] }}">{{ channel['name'] }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-sm-9">
+            <h2><span id="channel" class="label label-info"></span></h2>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <p>Favouriten</p>
+                </div>
+                <div class="panel-body">
+                    <ul id="favouritMessages" class="chat">
+                    </ul>
+                </div>
+            </div>
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <p>Nachrichten</p>
+                </div>
+                <div class="panel-body">
+                    <ul id="messageBox" class="chat">
+                    </ul>
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <p id="editMessageHeader">Neue Nachricht</p>
+                </div>
+                <div class="panel-body">
+                    <form id="newMessage" method="post" action="#">
+                    <input type="text" name="messageId" id="messageId" value="{{ messageId }}" style="display:none;" />
+                        <div class="input-group input-group-lg">
+                        <span class="input-group-addon" id="sizing-addon1">Titel</span>
+                        <input id="title" name="title" type="text" class="form-control" placeholder="Titel" aria-describedby="sizing-addon1" value="{{ messageTitle }}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment">Nachricht:</label>
+                        <textarea id="message" name="message" class="form-control" rows="5" id="comment" value="">{{ messageContent }}</textarea>
+                    </div>
+                    <button form="newMessage" type="submit" class="btn btn-primary btn-lg" formaction="{{ sendNewMessage }}">Speichern</button>
+                    <button class="btn btn-danger btn-lg" type="submit"  formaction="{{ resetMessages }}">Abbrechen </button>
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scriptBlock %}
+    <script>
+        function poll(){
+            setTimeout(function(){
+                pollData();
+            },30000);
+        }
+        function pollData(){
+            var url = "/{{ fetchDataUrl }}";
+            $.ajax({ url: url, success: function(data) {
+                var channel = data.channel;
+                $("#channel").html(channel);
+                var messages = data.messages;
+                $('#messageBox').html("");
+                $('#favouritMessages').html("");
+
+                for(var i=0; i<messages.length; i++) {
+
+                    var toAppend = '<li class="left clearfix"><span class="chat-img pull-left glyphicon glyphicon-user">' +
+
+                            '</span>' +
+                            '<div class="chat-body clearfix">' +
+                            '<div class="header">' +
+                            '<strong class="primary-font">' + messages[i].autor + '</strong> <small class="text-muted">' +
+                            '<span class="glyphicon glyphicon-time"></span>' + messages[i].written +
+                            '</small>' +
+                            '<span class="pull-right">';
+                            if(messages[i].isFavourite == 1){
+                                toAppend +='<a href='+messages[i].removeFromFavourite +' class="btn btn-lg "><span class=" glyphicon glyphicon-star"></span></a>';
+                            }else {
+                                toAppend += '<a href=' + messages[i].addToFavourite + ' class="btn btn-lg "><span class=" glyphicon glyphicon-star-empty"></span></a>';
+                            }
+                    if(messages[i].isEditable){
+                        toAppend += '<a href='+messages[i].editLink +' class="btn btn-lg "><span class=" glyphicon glyphicon-pencil"></span></a>';
+                    }
+                    if(messages[i].isRemoveAble) {
+                        toAppend += '<a href='+messages[i].removeLink+ ' class="btn btn-lg "><span class=" glyphicon glyphicon-remove"></span></a>';
+                    }
+                    toAppend += '</span></div>' +
+                    '<h3> '+messages[i].title + '</h3>'+
+                    '<p>' + messages[i].message +
+                    '</p>' +
+                    '</div>' +
+                    '</li>'
+                    $('#messageBox').append(toAppend);
+                }
+                var favourits = data.favouriteMessages;
+                for(var i=0; i<favourits.length; i++) {
+
+                    var toAppend = '<li class="left clearfix"><span class="chat-img pull-left glyphicon glyphicon-user">' +
+                            '</span>' +
+                            '<div class="chat-body clearfix">' +
+                            '<div class="header">' +
+                            '<strong class="primary-font">' + favourits[i].autor + '</strong> <small class="text-muted">' +
+                            '<span class="glyphicon glyphicon-time"></span>' + favourits[i].written +
+                            '</small>' +
+                            '<span class="pull-right">' +
+                            '<a href='+favourits[i].removeFromFavourite +' class="btn btn-lg "><span class=" glyphicon glyphicon-star"></span></a>';
+                    if(favourits[i].isEditable){
+                        toAppend += '<a href='+favourits[i].editLink +' class="btn btn-lg "><span class=" glyphicon glyphicon-pencil"></span></a>';
+                    }
+                    if(favourits[i].isRemoveAble) {
+                        toAppend += '<a href='+favourits[i].removeLink+ ' class="btn btn-lg "><span class=" glyphicon glyphicon-remove"></span></a>';
+                    }
+                    toAppend += '</span></div>' +
+                            '<h3> '+favourits[i].title + '</h3>'+
+                    '<p>' + favourits[i].message +
+                    '</p>' +
+                    '</div>' +
+                    '</li>'
+                    $('#favouritMessages').append(toAppend);        }
+
+
+            }, dataType: "json", complete: poll });
+        }
+        pollData();
+
+    </script>
+{%  endblock %}

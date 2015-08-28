@@ -1,0 +1,146 @@
+{% extends "base.twig" %}
+
+{% block content %}
+<!--<div id="loginModal" class="modal show" tabindex="-1" role="dialog" aria-hidden="true">
+    <form method="post" action="{{ action }}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h1 class="text-center">Login</h1>
+            </div>
+            <div class="modal-body">
+                <form class="form col-md-12 center-block">
+                    <div class="form-group">
+                        <input type="text" class="form-control input-lg"  id="userName" name="userName" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control input-lg" id="password" name="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">Anmelden</button>
+                        <span class="pull-right"><a href="#">Registrieren</a></span><span><a href="#">Hilfe</a></span>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    </form>
+</div>-->
+    <div class="container">
+        <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+            <div class="panel panel-info" >
+                <div class="panel-heading">
+                    <div class="panel-title">Anmelden</div>
+                </div>
+
+                <div style="padding-top:30px" class="panel-body" >
+
+                    <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+
+                    <form id="loginform" method="post" action="{{ action }}" class="form-horizontal" role="form">
+
+                        <div style="margin-bottom: 25px" class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="Benutzername">
+                        </div>
+
+                        <div style="margin-bottom: 25px" class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input id="login-password" type="password" class="form-control" name="password" placeholder="Passwort">
+                        </div>
+
+
+                        <div style="margin-top:10px" class="form-group">
+                            <!-- Button <a id="btn-login" href="{{ action }}" class="btn btn-success">Anmelden  </a>-->
+                            <div class="col-sm-12 controls">
+                            <button type="submit" class="btn btn-success">Anmelden</button>
+                            </div>
+
+
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-md-12 control">
+                                <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
+                                   Sie haben noch keinen Account!
+                                    <a href="#" onClick="$('#loginbox').hide(); $('#signupbox').show()">
+                                        Hier Registrieren
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+
+
+                </div>
+            </div>
+        </div>
+        <div id="signupbox" style="display:none; margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title">Registrieren</div>
+                    <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Anmelden</a></div>
+                </div>
+                <div class="panel-body" >
+                    <form id="signupform" class="form-horizontal" role="form" method="post" action="{{ register }}">
+
+                        <div id="signupalert" style="display:none" class="alert alert-danger">
+                            <p>Error:</p>
+                            <span></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="col-md-3 control-label">Username</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="username" placeholder="Username or Email">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="firstname" class="col-md-3 control-label">Vorname</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="firstname" placeholder="First Name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname" class="col-md-3 control-label">Nachname</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="lastname" placeholder="Last Name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="col-md-3 control-label">Passwort</label>
+                            <div class="col-md-9">
+                                <input type="password" class="form-control" name="password" placeholder="Password">
+                            </div>
+                        </div>
+                        {% for channel in channels %}
+                        <div class="form-group">
+
+                                <label for="{{ channel['id'] }}" class="col-md-3 control-label">Channel</label>
+
+
+                            <div class="checkbox col-md-9">
+                                        <label>
+                                          <input id="{{ channel['id'] }}" type="checkbox" name="{{ channel['id'] }}" value="1"> {{ channel['name'] }}
+                                        </label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="form-group">
+                            <!-- Button -->
+                            <div class="col-md-offset-3 col-md-9">
+                            <button type="submit" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Registrieren</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

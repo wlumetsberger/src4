@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head %}
+        <!--<link rel="stylesheet" href="style.css" />-->
+        <link href="libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <title>{% block title %}{% endblock %} - Slack- Light</title>
+    {% endblock %}
+</head>
+<body>
+{% if loggedIn is defined %}
+    {% block navigation %}
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <p class="navbar-brand">Slack-Light</p>
+            </div>
+            <div class="navbar-right">
+                <p class="navbar-text"> Angemeldet als {{ loggedIn }}</p>
+                <ul class="nav navbar-nav">
+                  <!--  <form method="post" action="{{ logout }}">
+                        <input class="btn btn-xs" role="button" type="submit" value="Logout" />
+                    </form>
+                  --> <li> <a href="{{ logout }}">Logout</a></li>
+                    </ul>
+            </div>
+
+        </div>
+    </nav>
+    {% endblock %}
+{% endif %}
+<div id="content">{% block content %}<h1>Willkommen</h1>{% endblock %}</div>
+
+<script src="libs/jquery/jquery-2.1.4.min.js"> </script>
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+{% block scriptBlock %}
+{% endblock %}
+</body>
+</html>
