@@ -66,6 +66,7 @@ class MainController extends BaseObject{
                 $json .= ",\"removeLink\":\"" . Util::action('deleteMessage',array('messageId'=>$messages[$i]->getID())) . "\"";
                 $json .= ",\"addToFavourite\":\"" . Util::action('addFavourite',array('messageId'=>$messages[$i]->getID())) . "\"";
                 $json .= ",\"removeFromFavourite\":\"" . Util::action('removeFavourite',array('messageId'=>$messages[$i]->getID())) . "\"";
+            $json .= ",\"isUnread\":\"" . $messages[$i]->isShowUnread() . "\"";
                 $json .= "}";
                 $first = false;
             //}

@@ -144,9 +144,15 @@
                             '<div class="chat-body clearfix">' +
                             '<div class="header">' +
                             '<strong class="primary-font">' + messages[i].autor + '</strong> <small class="text-muted">' +
-                            '<span class="glyphicon glyphicon-time"></span>' + messages[i].written +
-                            '</small>' +
+                            '<span class="glyphicon glyphicon-time"></span>' + messages[i].written;
+
+                            toAppend += '</small>' +
                             '<span class="pull-right">';
+                    if(messages[i].isUnread){
+                        toAppend += ' ungelesen';
+                    }else{
+                        toAppend += ' gelesen';
+                    }
                             if(messages[i].isFavourite == 1){
                                 toAppend +='<a href='+messages[i].removeFromFavourite +' class="btn btn-lg "><span class=" glyphicon glyphicon-star"></span></a>';
                             }else {

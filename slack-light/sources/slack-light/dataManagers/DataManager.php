@@ -78,4 +78,12 @@ class DataManager {
         $connection->close();
     }
 
+    public static function writeLog($logMessage){
+        $con = self::getConnection();
+        self::query($con, 'BEGIN;');
+        $msg = $con->real_escape_string($logMessage);
+        self::query($con, "INSERT INTO logging (user_id,ip,action) VALUES ('".SessionController::getUser()."','".Util::getClientIp()."', '".$msg."')");
+        self::query($con, 'COMMIT;');
+        self::closeConnection($con);
+    }
 }

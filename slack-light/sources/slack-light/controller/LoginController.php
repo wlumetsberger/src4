@@ -40,15 +40,18 @@ class LoginController extends BaseObject{
     }
 
     public function handleLogout(){
+        DataManager::writeLog('logout user '. SessionController::getUser());
         SessionController::destroy();
     }
     public static function authenticate($username, $password){
         $user = UserDataManager::getUserForUserName($username);
         if($user != null && $user->getPasswordHash() == hash('sha1',$username . '|' . $password)){
             SessionController::addUser($user->getID());
+            DataManager::writeLog('login');
             return true;
         }
         SessionController::addErrorMessage('Benutzername oder Passwort ist falsch');
+        DataManager::writeLog('login failed');
         return false;
     }
     public function register(){
@@ -57,8 +60,16 @@ class LoginController extends BaseObject{
         $lastname = $_REQUEST['lastname'];
         $password = $_REQUEST['password'];
 
+        if(!isset($_REQUEST['username']) || ! isset($_REQUEST['firstname']) || ! isset( $_REQUEST['lastname']) || !isset( $_REQUEST['password']) ){
+            SessionController::addErrorMessage('Bitte füllen Sie alle Felder aus');
+            DataManager::writeLog('failed to register user');
+            return false;
+        }
+
         if(UserDataManager::getUserForUserName($username) != null){
            SessionController::addErrorMessage('Benutzer existiert bereits');
+            DataManager::writeLog('failed to register user, user alleready exists');
+            return false;
         }
         $channels = UserDataManager::getChannelsAvailable();
         $passwordHash = hash('sha1',$username . '|' . $password);
@@ -69,6 +80,7 @@ class LoginController extends BaseObject{
                 UserDataManager::insertChannelForUser($user->getId(),$val->getID());
             }
         }
+        DataManager::writeLog('registered user ' . $username . "/" . $firstname . "/" . $lastname);
         return true;
     }
 

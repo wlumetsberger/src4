@@ -31,4 +31,8 @@ class Util extends BaseObject{
         }
         header('Location: ' . $page);
     }
+
+    public static function getClientIp(){
+        return $_SERVER['REMOTE_ADDR'];
+    }
 }

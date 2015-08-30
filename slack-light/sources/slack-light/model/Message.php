@@ -15,8 +15,9 @@ class Message extends Entity implements JsonSerializable{
     private $editable;
     private $creation;
     private $title;
+    private $showUnread;
 
-    public function __construct($id, $user, $channel,$titel ,$content, $editable, $favourite, $creation){
+    public function __construct($id, $user, $channel,$titel ,$content, $editable, $favourite, $creation, $showUnread){
         parent::__construct($id);
         $this->user = $user;
         $this->channel = $channel;
@@ -25,6 +26,11 @@ class Message extends Entity implements JsonSerializable{
         $this->editable = $editable;
         $this->creation = $creation;
         $this->title = $titel;
+        $this->showUnread = $showUnread;
+    }
+
+    public function isShowUnread(){
+        return $this->showUnread;
     }
 
     public function getTitle(){
