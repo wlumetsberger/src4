@@ -2,7 +2,8 @@
 SQLyog Community v12.12 (64 bit)
 MySQL - 5.6.24 : Database - slacklight
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -81,7 +82,9 @@ CREATE TABLE `message_user` (
   `message_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `favourite` tinyint(1) NOT NULL,
-  PRIMARY KEY (`message_id`,`user_id`)
+  PRIMARY KEY (`message_id`,`user_id`),
+  CONSTRAINT `message_user_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `message_user_ibfk_1` FOREIGN KEY (`message_id`) REFERENCES `message` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Table structure for table `user` */
