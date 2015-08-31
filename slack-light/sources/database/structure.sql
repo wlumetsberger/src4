@@ -84,7 +84,7 @@ CREATE TABLE `message_user` (
   `favourite` tinyint(1) NOT NULL,
   PRIMARY KEY (`message_id`,`user_id`),
   CONSTRAINT `message_user_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `message_user_ibfk_1` FOREIGN KEY (`message_id`) REFERENCES `message` (`id`)
+  CONSTRAINT `message_user_ibfk_2` FOREIGN KEY (`message_id`) REFERENCES `message` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Table structure for table `user` */
