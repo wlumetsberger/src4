@@ -19,7 +19,7 @@ class DataManager {
      * @return connection resource
      */
     protected static function getConnection() {
-        $con = new mysqli('localhost', 'root', '', 'slacklight');
+        $con = new mysqli('localhost', 'fh_2015_scm4', 'fh_2015_scm4', 'fh_2015_scm4_S1310307025');
         if (mysqli_connect_errno()) {
             die('Unable to connect to database.');
         }
